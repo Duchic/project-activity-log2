@@ -1,8 +1,8 @@
-package com.example.application.views.projects;
+package com.example.projectactivitylog.views.projects;
 
-import com.example.application.data.entity.SamplePerson;
-import com.example.application.data.service.SamplePersonService;
-import com.example.application.views.MainLayout;
+import com.example.projectactivitylog.data.entity.SamplePerson;
+import com.example.projectactivitylog.data.service.SamplePersonService;
+import com.example.projectactivitylog.views.MainLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;

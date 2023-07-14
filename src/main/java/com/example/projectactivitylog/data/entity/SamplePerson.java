@@ -1,4 +1,4 @@
-package com.example.application.data.entity;
+package com.example.projectactivitylog.data.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.Email;

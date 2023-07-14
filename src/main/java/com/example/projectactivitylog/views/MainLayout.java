@@ -1,8 +1,8 @@
-package com.example.application.views;
+package com.example.projectactivitylog.views;
 
-import com.example.application.views.logger.LoggerView;
-import com.example.application.views.person.PersonView;
-import com.example.application.views.projects.ProjectsView;
+import com.example.projectactivitylog.views.logger.LoggerView;
+import com.example.projectactivitylog.views.person.PersonView;
+import com.example.projectactivitylog.views.projects.ProjectsView;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.html.Footer;
