@@ -10,7 +10,7 @@ import lombok.Data;
 public class ProjectDto {
 
 
-    private int id;
+    private Integer id;
 
 
     private String name;
