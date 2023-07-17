@@ -2,6 +2,7 @@ package com.example.projectactivitylog;
 
 import com.example.projectactivitylog.data.service.SamplePersonRepository;
 import com.vaadin.flow.component.page.AppShellConfigurator;
+import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.theme.Theme;
 import javax.sql.DataSource;
 import org.springframework.boot.SpringApplication;
@@ -18,6 +19,7 @@ import org.springframework.context.annotation.Bean;
  *
  */
 @SpringBootApplication
+@Push
 @Theme(value = "projectactivitylog")
 public class Application implements AppShellConfigurator {
 
