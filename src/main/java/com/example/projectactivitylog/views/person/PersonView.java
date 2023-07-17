@@ -2,25 +2,31 @@ package com.example.projectactivitylog.views.person;
 
 import com.example.projectactivitylog.data.entity.SamplePerson;
 import com.example.projectactivitylog.data.service.SamplePersonService;
+import com.example.projectactivitylog.dto.PersonDto;
+import com.example.projectactivitylog.dto.ProjectDto;
+import com.example.projectactivitylog.servicess.PersonService;
 import com.example.projectactivitylog.views.MainLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.customfield.CustomField;
-import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dependency.Uses;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.selection.SelectionEvent;
+import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+
+import java.util.Optional;
 
 @PageTitle("Person")
 @Route(value = "person", layout = MainLayout.class)
@@ -29,36 +35,64 @@ public class PersonView extends Div {
 
     private TextField firstName = new TextField("First name");
     private TextField lastName = new TextField("Last name");
-    private EmailField email = new EmailField("Email address");
-    private DatePicker dateOfBirth = new DatePicker("Birthday");
-    private PhoneNumberField phone = new PhoneNumberField("Phone number");
-    private TextField occupation = new TextField("Occupation");
 
-    private Button cancel = new Button("Cancel");
-    private Button save = new Button("Save");
+    private Button btnCancel = new Button("Cancel");
+    private Button btnSave = new Button("Save");
+    private Button btnNewPerson = new Button("New");
 
-    private Binder<SamplePerson> binder = new Binder<>(SamplePerson.class);
+    private Binder<PersonDto> binder = new Binder<>(PersonDto.class);
 
-    public PersonView(SamplePersonService personService) {
+    public PersonView(PersonService personService) {
         addClassName("person-view");
+        configureBinder();
+        Grid<PersonDto> grid = new Grid<>(PersonDto.class, false);
+        grid.addColumn(PersonDto::getId).setHeader("ID");
+        grid.addColumn(PersonDto::getName).setHeader("First name");
+        grid.addColumn(PersonDto::getSurname).setHeader("LastName");
+        grid.setItems(personService.getAllPerson());
+        grid.addSelectionListener(new SelectionListener<Grid<PersonDto>, PersonDto>() {
+            @Override
+            public void selectionChange(SelectionEvent<Grid<PersonDto>, PersonDto> selectionEvent) {
+                Optional<PersonDto> firstSelectedItem = selectionEvent.getFirstSelectedItem();
+                if (firstSelectedItem.isPresent()) {
+                    binder.setBean(firstSelectedItem.get());
+                }
+            }
+        });
 
         add(createTitle());
+        add(grid);
         add(createFormLayout());
         add(createButtonLayout());
 
-        binder.bindInstanceFields(this);
+        //binder.bindInstanceFields(this);
         clearForm();
 
-        cancel.addClickListener(e -> clearForm());
-        save.addClickListener(e -> {
-            personService.update(binder.getBean());
+        btnCancel.addClickListener(e -> clearForm());
+        btnSave.addClickListener(e -> {
+            PersonDto personDto = binder.getBean();
+            personService.updatePerson(personDto);
+            grid.setItems(personService.getAllPerson());
+            Notification.show(binder.getBean().getClass().getSimpleName() + " details stored.");
+            clearForm();
+        });
+
+        btnNewPerson.addClickListener(buttonClickEvent -> {
+            PersonDto personDto = binder.getBean();
+            personService.createNewPerson(personDto);
+            grid.setItems(personService.getAllPerson());
             Notification.show(binder.getBean().getClass().getSimpleName() + " details stored.");
             clearForm();
         });
     }
 
+    private void configureBinder() {
+        binder.bind(firstName, PersonDto::getName, (PersonDto::setName));
+        binder.bind(lastName, PersonDto::getSurname, (PersonDto::setSurname));
+    }
+
     private void clearForm() {
-        binder.setBean(new SamplePerson());
+        binder.setBean(new PersonDto());
     }
 
     private Component createTitle() {
@@ -67,17 +101,17 @@ public class PersonView extends Div {
 
     private Component createFormLayout() {
         FormLayout formLayout = new FormLayout();
-        email.setErrorMessage("Please enter a valid email address");
-        formLayout.add(firstName, lastName, dateOfBirth, phone, email, occupation);
+        formLayout.add(firstName, lastName);
         return formLayout;
     }
 
     private Component createButtonLayout() {
         HorizontalLayout buttonLayout = new HorizontalLayout();
         buttonLayout.addClassName("button-layout");
-        save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        buttonLayout.add(save);
-        buttonLayout.add(cancel);
+        btnSave.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        buttonLayout.add(btnSave);
+        buttonLayout.add(btnCancel);
+        buttonLayout.add(btnNewPerson);
         return buttonLayout;
     }
 
