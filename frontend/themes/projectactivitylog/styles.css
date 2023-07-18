@@ -1,3 +1,9 @@
 @import url('./main-layout.css');
 @import url('./views/projects-view.css');
 @import url('./views/person-view.css');
+
+.timer {
+    border: 10px solid #000;
+    text-align: center;
+    font-size: 100px;
+}

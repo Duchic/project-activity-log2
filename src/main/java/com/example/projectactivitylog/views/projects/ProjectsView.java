@@ -36,6 +36,7 @@ public class ProjectsView extends Div {
 
     private Button btnCancel = new Button("Cancel");
     private Button btnSave = new Button("Save");
+    private Button btnDelete = new Button("Delete");
 
     private Button btnNewProject = new Button("New");
 
@@ -75,7 +76,7 @@ public class ProjectsView extends Div {
             projectService.updateProject(projectDto);
             grid.setItems(projectService.getAllProject());
             //personService.update(binder.getBean());
-            Notification.show(binder.getBean().getClass().getSimpleName() + " details stored.");
+            Notification.show("New project stored.");
             clearForm();
         });
 
@@ -83,7 +84,15 @@ public class ProjectsView extends Div {
             ProjectDto projectDto = binder.getBean();
             projectService.createNewProject(projectDto);
             grid.setItems(projectService.getAllProject());
-            Notification.show(binder.getBean().getClass().getSimpleName() + " details stored.");
+            Notification.show("Details stored.");
+            clearForm();
+        });
+
+        btnDelete.addClickListener(buttonClickEvent -> {
+            ProjectDto projectDto = binder.getBean();
+            projectService.deleteProject(projectDto.getId());
+            grid.setItems(projectService.getAllProject());
+            Notification.show("Project deleted.");
             clearForm();
         });
     }
@@ -109,6 +118,7 @@ public class ProjectsView extends Div {
         buttonLayout.add(btnSave);
         buttonLayout.add(btnCancel);
         buttonLayout.add(btnNewProject);
+        buttonLayout.add(btnDelete);
         return buttonLayout;
     }
 

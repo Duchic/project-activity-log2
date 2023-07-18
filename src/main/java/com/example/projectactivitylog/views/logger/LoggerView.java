@@ -3,6 +3,7 @@ package com.example.projectactivitylog.views.logger;
 import com.example.projectactivitylog.dto.LogDto;
 import com.example.projectactivitylog.dto.PersonDto;
 import com.example.projectactivitylog.dto.ProjectDto;
+import com.example.projectactivitylog.servicess.ExcellExportServices;
 import com.example.projectactivitylog.servicess.LogService;
 import com.example.projectactivitylog.servicess.PersonService;
 import com.example.projectactivitylog.servicess.ProjectService;
@@ -18,6 +19,7 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.selection.SelectionEvent;
@@ -45,6 +47,7 @@ public class LoggerView extends Div {
 
     private Button btnStart = new Button("Start");
     private Button btnStop = new Button("Stop");
+    private Button btnExcel = new Button("Excel export");
     private ComboBox<ProjectDto> projectDtoComboBox = new ComboBox<>("Project");
     private ComboBox<PersonDto> personDtoComboBox = new ComboBox<>("Person");
 
@@ -69,7 +72,7 @@ public class LoggerView extends Div {
         grid = new Grid<>(LogDto.class, false);
         grid.addColumn(LogDto::getId).setHeader("ID");
         grid.addColumn(logDto -> logDto.getStart().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss"))).setHeader("Start");
-        grid.addColumn(LogDto::getStop).setHeader("Stop");
+        grid.addColumn(logDto -> logDto.getStop().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss"))).setHeader("Stop");
         grid.addColumn(LogDto::getProject_id).setHeader("Project");
         grid.addColumn(LogDto::getPerson_id).setHeader("Person");
         grid.setItems(logService.getAllRecord());
@@ -93,10 +96,12 @@ public class LoggerView extends Div {
         add(div);
         btnStart.setEnabled(false);
         btnStop.setEnabled(false);
+        div.setText("00:00:00");
         personDtoComboBox.addValueChangeListener(e -> enableButtonStart());
         projectDtoComboBox.addValueChangeListener(e -> enableButtonStart());
         btnStart.addClickListener(buttonClickEvent -> startStopWatch());
         btnStop.addClickListener(buttonClickEvent -> stopStopWatch());
+        btnExcel.addClickListener(buttonClickEvent -> ExcellExportServices.export(logService));
 
     }
 
@@ -109,6 +114,7 @@ public class LoggerView extends Div {
 
     private void startStopWatch() {
         btnStop.setEnabled(true);
+        btnStart.setEnabled(false);
         start = LocalDateTime.now();
         timer = new Timer();
         UI current = UI.getCurrent();
@@ -120,9 +126,9 @@ public class LoggerView extends Div {
                     @Override
                     public void execute() {
                         int second = seconds.get();
-                        int hours = calculateHours(second);
-                        int min = calculateMin(second);
-                        int sec = calculateSec(second);
+                        String hours = calculateHours(second);
+                        String min = calculateMin(second);
+                        String sec = calculateSec(second);
                         div.setText(hours + ":" + min + ":" + sec);
                     }
                 });
@@ -132,19 +138,37 @@ public class LoggerView extends Div {
         System.out.println("start " + start);
     }
 
-    private int calculateHours(int seconds) {
+    private String calculateHours(int seconds) {
         int hour = seconds/60/60;
-        return hour;
+        String strHour = null;
+        if (hour < 10) {
+            strHour = "0" + hour;
+        } else {
+            strHour = hour+"";
+        }
+        return strHour;
     }
 
-    private int calculateMin(int seconds) {
+    private String calculateMin(int seconds) {
         int min = (seconds%3600)/60;
-        return min;
+        String strMin = null;
+        if (min < 10) {
+            strMin = "0" + min;
+        } else {
+            strMin = min+"";
+        }
+        return strMin;
     }
 
-    private int calculateSec(int seconds) {
+    private String calculateSec(int seconds) {
         int sec = seconds%60;
-        return sec;
+        String strSec = null;
+        if (sec < 10) {
+            strSec = "0" + sec;
+        } else {
+            strSec = sec+"";
+        }
+        return strSec;
     }
 
     private void stopStopWatch() {
@@ -152,7 +176,8 @@ public class LoggerView extends Div {
             timer.cancel();
             timer = null;
             stop = LocalDateTime.now();
-
+            btnStop.setEnabled(false);
+            btnStart.setEnabled(false);
         }
         System.out.println("stop " + stop);
         seconds.set(0);
@@ -163,6 +188,8 @@ public class LoggerView extends Div {
         logDto.setPerson_id(personDtoComboBox.getValue().getId());
         logService.createNewLog(logDto);
         grid.setItems(logService.getAllRecord());
+        projectDtoComboBox.setValue(null);
+        personDtoComboBox.setValue(null);
     }
 
     private void setComboBoxValues() {
@@ -196,6 +223,7 @@ public class LoggerView extends Div {
         btnStart.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         buttonLayout.add(btnStart);
         buttonLayout.add(btnStop);
+        buttonLayout.add(btnExcel);
         return buttonLayout;
     }
 

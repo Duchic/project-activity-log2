@@ -39,6 +39,7 @@ public class PersonView extends Div {
     private Button btnCancel = new Button("Cancel");
     private Button btnSave = new Button("Save");
     private Button btnNewPerson = new Button("New");
+    private Button btnDelete = new Button("Delete");
 
     private Binder<PersonDto> binder = new Binder<>(PersonDto.class);
 
@@ -73,7 +74,7 @@ public class PersonView extends Div {
             PersonDto personDto = binder.getBean();
             personService.updatePerson(personDto);
             grid.setItems(personService.getAllPerson());
-            Notification.show(binder.getBean().getClass().getSimpleName() + " details stored.");
+            Notification.show("Details stored.");
             clearForm();
         });
 
@@ -81,7 +82,15 @@ public class PersonView extends Div {
             PersonDto personDto = binder.getBean();
             personService.createNewPerson(personDto);
             grid.setItems(personService.getAllPerson());
-            Notification.show(binder.getBean().getClass().getSimpleName() + " details stored.");
+            Notification.show("New person stored.");
+            clearForm();
+        });
+
+        btnDelete.addClickListener(buttonClickEvent -> {
+            PersonDto personDto = binder.getBean();
+            personService.deletePerson(personDto.getId());
+            grid.setItems(personService.getAllPerson());
+            Notification.show("Person deleted.");
             clearForm();
         });
     }
@@ -112,6 +121,7 @@ public class PersonView extends Div {
         buttonLayout.add(btnSave);
         buttonLayout.add(btnCancel);
         buttonLayout.add(btnNewPerson);
+        buttonLayout.add(btnDelete);
         return buttonLayout;
     }
 
