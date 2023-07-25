@@ -4,9 +4,11 @@ import com.example.projectactivitylog.entities.PersonEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class PersonDto {
 
@@ -16,11 +18,11 @@ public class PersonDto {
 
     private String surname;
 
-    public static PersonDto of(PersonEntity personEntity) {
-        return PersonDto.builder()
-                .id(personEntity.getId())
-                .name(personEntity.getName())
-                .surname(personEntity.getSurname())
-                .build();
-    }
+    //public static PersonDto of(PersonEntity personEntity) {
+    //    return PersonDto.builder()
+    //            .id(personEntity.getId())
+    //            .name(personEntity.getName())
+    //            .surname(personEntity.getSurname())
+    //            .build();
+    //}
 }
