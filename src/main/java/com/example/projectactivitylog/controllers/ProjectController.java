@@ -48,10 +48,10 @@ public class ProjectController {
         projectService.deleteProject(id);
     }
 
-    @GetMapping("/")
-    public String hello() {
-        return "Hello";
-    }
+    //@GetMapping("/")
+    //public String hello() {
+       // return "Hello";
+    //}
 
 
 }

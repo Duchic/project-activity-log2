@@ -46,8 +46,8 @@ public class PersonController {
         personService.deletePerson(id);
     }
 
-    @GetMapping("/")
-    public String hello() {
-        return "Hello";
-    }
+    //@GetMapping("/")
+    //public String hello() {
+        //return "Hello";
+    //}
 }
