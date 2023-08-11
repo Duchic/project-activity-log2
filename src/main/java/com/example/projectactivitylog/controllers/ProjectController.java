@@ -34,8 +34,8 @@ public class ProjectController {
     }
     @CrossOrigin
     @GetMapping("/project") //testovaci vrati list
-    public List<ProjectEntity> getAllProjects() {
-        return projectsDB;
+    public List<ProjectDto> getAllProjects() {
+        return projectService.getAllProject();
     }
 
     @PostMapping("/project/update/{id}") //hotovo

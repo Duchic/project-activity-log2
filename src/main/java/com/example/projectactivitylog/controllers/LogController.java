@@ -27,7 +27,7 @@ public class LogController {
     }
 
     @GetMapping("/log")
-    public List<LogEntity> getAll() {
-        return logDG;
+    public List<LogDto> getAll() {
+        return logService.getAllRecord();
     }
 }
