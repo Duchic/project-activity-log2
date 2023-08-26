@@ -10,9 +10,9 @@ import java.util.List;
 
 public class PersonController {
 
-    private List<PersonEntity> personDB = List.of(new PersonEntity(1, "Jan", "Z Rokycan"), //testovaci DB - nutne v getAllPerson dat <ProjectEntity> a vracet tuhle promenou
-            new PersonEntity(2, "Pavel", "Test"),
-            new PersonEntity(3, "Dalsi", "Testovaci"));
+    //private List<PersonEntity> personDB = List.of(new PersonEntity(1, "Jan", "Z Rokycan"), //testovaci DB - nutne v getAllPerson dat <ProjectEntity> a vracet tuhle promenou
+    //           new PersonEntity(2, "Pavel", "Test"),
+    //           new PersonEntity(3, "Dalsi", "Testovaci"));
 
     private final PersonService personService;
 

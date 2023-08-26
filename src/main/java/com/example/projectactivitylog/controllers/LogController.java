@@ -14,9 +14,9 @@ import java.util.List;
 @RestController
 public class LogController {
 
-    private List<LogEntity> logDG = List.of(new LogEntity(1, LocalDateTime.now(), LocalDateTime.now().minusHours(3), 1,1),
-            new LogEntity(1, LocalDateTime.now(), LocalDateTime.now().minusHours(1), 2,2),
-            new LogEntity(1, LocalDateTime.now(), LocalDateTime.now().minusHours(2), 3,3));
+    //private List<LogEntity> logDG = List.of(new LogEntity(1, LocalDateTime.now(), LocalDateTime.now().minusHours(3), 1,1),
+    //        new LogEntity(1, LocalDateTime.now(), LocalDateTime.now().minusHours(1), 2,2),
+    //        new LogEntity(1, LocalDateTime.now(), LocalDateTime.now().minusHours(2), 3,3));
 
 
     private final LogService logService;
